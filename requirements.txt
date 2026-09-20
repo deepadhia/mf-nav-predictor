@@ -1,0 +1,10 @@
+requests>=2.32
+python-dotenv>=1.1
+pandas>=2.2
+numpy>=2.0
+yfinance>=0.2.65
+yahooquery>=2.4
+PyYAML>=6.0
+rich>=13.9
+rapidfuzz>=3.13
+websocket-client>=1.8

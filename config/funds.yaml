@@ -1,0 +1,23 @@
+funds:
+  - key: helios
+    name: Helios Flexi Cap Fund Direct Growth
+    symbol: "0P0001RR6I.BO"
+  - key: motilal_midcap
+    name: Motilal Oswal Midcap Fund Direct Growth
+    symbol: "0P00012ALS.BO"
+  - key: trust_smallcap
+    name: TrustMF Small Cap Fund Direct Growth
+    symbol: "0P0001TSX8.BO"
+  - key: quant_multiasset
+    name: Quant Multi Asset Allocation Fund Growth Option Direct Plan
+    symbol: "0P0000XW4C.BO"
+
+settings:
+  checkpoint_time: "13:30"
+  # Upstox API can quote up to 500 instruments per request.
+  batch_size: 200
+  signal_threshold_pct: 1.00
+  telegram_alert_threshold_pct: 1.00
+  telegram_only_on_material_move: true
+  min_coverage_pct: 15
+  use_yfinance_fallback: true
