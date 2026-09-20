@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import argparse
 import json
 import re
 from pathlib import Path
@@ -15,6 +16,7 @@ import yfinance as yf
 
 from upstox_client import search_instrument, ltp
 from telegram_notifier import send_nav_alert, is_telegram_configured
+from market_calendar import is_trading_day
 
 ROOT = Path(__file__).resolve().parents[1]
 load_dotenv(dotenv_path=ROOT / ".env", override=True)
@@ -208,6 +210,22 @@ def yahoo_fallback(symbols: list[str]) -> dict:
     return out
 
 def main():
+    parser = argparse.ArgumentParser(description="Mutual Fund Intraday NAV Predictor")
+    parser.add_argument(
+        "--force",
+        "--ignore-holiday",
+        dest="ignore_holiday",
+        action="store_true",
+        help="Run predictor even on weekends or market holidays",
+    )
+    parser.add_argument(
+        "--force-alert",
+        dest="force_alert",
+        action="store_true",
+        help="Force send Telegram alert regardless of the 1% threshold",
+    )
+    args = parser.parse_args()
+
     c = cfg()
     use_fallback = bool(c.get("settings", {}).get("use_yfinance_fallback", True))
     threshold = float(c.get("settings", {}).get("signal_threshold_pct", 0.50))
@@ -217,6 +235,13 @@ def main():
     console.print("[bold cyan]==================================================================[/bold cyan]")
     console.print("[bold cyan]  MUTUAL FUND INTRADAY NAV PREDICTOR (UPSTOX V3 + YFINANCE)      [/bold cyan]")
     console.print("[bold cyan]==================================================================[/bold cyan]\n")
+
+    # 1. Trading Day & Market Holiday Validation
+    is_open, reason = is_trading_day()
+    if not is_open and not args.ignore_holiday:
+        console.print(f"[bold yellow][!] Market Closed Today:[/bold yellow] [yellow]{reason}[/yellow]")
+        console.print("[dim]Intraday prediction skipped. (Use '--force' or '--ignore-holiday' to run manually).[/dim]\n")
+        return
 
     summary = []
     fund_results_for_alert = []
@@ -384,10 +409,11 @@ def main():
             checkpoint_time=checkpoint,
             threshold=alert_thresh,
             only_on_material=only_material,
+            force=args.force_alert,
         )
 
         if sent:
-            console.print("[bold green][OK] Telegram lump-sum alert delivered (move >= 1.0% detected)![/bold green]\n")
+            console.print(f"[bold green][OK] Telegram lump-sum alert delivered (move >= {alert_thresh:.1f}% detected)![/bold green]\n")
         elif reason == "NO_MATERIAL_MOVE":
             console.print(f"[dim][i] Telegram alert suppressed (no fund moved >= {alert_thresh:.1f}%). Everyday noise avoided.[/dim]\n")
         else:
