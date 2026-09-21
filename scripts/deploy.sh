@@ -31,13 +31,12 @@ chmod +x "${PROJECT_ROOT}/scripts/setup_oracle.sh"
 chmod +x "${PROJECT_ROOT}/scripts/mf_nav_cron.sh"
 "${PROJECT_ROOT}/scripts/setup_oracle.sh"
 
-# 3. Test Telegram connection if requested or as verification
+# 3. Test Telegram connection only if explicitly requested
 if [ "$1" == "--test-telegram" ] || [ "$1" == "-t" ]; then
     echo -e "\n${YELLOW}[3/4] Dispatching test notification to Telegram...${NC}"
     "${PROJECT_ROOT}/.venv/bin/python" "${PROJECT_ROOT}/scripts/test_telegram.py"
 else
-    echo -e "\n${YELLOW}[3/4] Testing Telegram bot connection...${NC}"
-    "${PROJECT_ROOT}/.venv/bin/python" "${PROJECT_ROOT}/scripts/test_telegram.py"
+    echo -e "\n${CYAN}[3/4] Skipping Telegram test notification (pass --test-telegram to test anytime).${NC}"
 fi
 
 # 4. Status summary
