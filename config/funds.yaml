@@ -18,6 +18,10 @@ settings:
   batch_size: 200
   signal_threshold_pct: 1.00
   telegram_alert_threshold_pct: 1.00
+  # Set to true to only alert when a fund has a material move (>= 1.0%), avoiding spam on normal days
   telegram_only_on_material_move: true
+  telegram_send_daily_digest: false
   min_coverage_pct: 15
   use_yfinance_fallback: true
+
+

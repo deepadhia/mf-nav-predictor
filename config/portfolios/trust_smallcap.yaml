@@ -1,0 +1,128 @@
+fund_name: TrustMF Small Cap Fund Direct Growth
+as_of: 2026-09-21 14:23 UTC
+holdings_count: 41
+total_weight: 71.1
+holdings:
+- symbol: WELCORP
+  name: Welspun Corp Ltd
+  weight: 2.38
+- symbol: KARURVYSYA
+  name: Karur Vysya Bank Ltd
+  weight: 2.38
+- symbol: '590003'
+  name: Karur Vysya Bank Ltd
+  weight: 2.38
+- symbol: ATHERENERG
+  name: Ather Energy Ltd
+  weight: 2.27
+- symbol: SANSERA
+  name: Sansera Engineering Ltd
+  weight: 2.22
+- symbol: KPRMILL
+  name: K.P.R. Mill Ltd
+  weight: 2.15
+- symbol: CERA
+  name: Cera Sanitaryware Ltd
+  weight: 2.1
+- symbol: SKYGOLD
+  name: Sky Gold and Diamonds Ltd
+  weight: 2.07
+- symbol: RADICO
+  name: Radico Khaitan Ltd
+  weight: 2.05
+- symbol: MCX
+  name: Multi Commodity Exchange of India Ltd
+  weight: 2.01
+- symbol: SHADOWFAX
+  name: Shadowfax Technologies Ltd
+  weight: 2.01
+- symbol: LENSKART
+  name: Lenskart Solutions Ltd
+  weight: 2.0
+- symbol: JBCHEPHARM
+  name: JB Chemicals & Pharmaceuticals Ltd
+  weight: 2.0
+- symbol: ELECON
+  name: Elecon Engineering Co Ltd
+  weight: 1.95
+- symbol: SAFARI
+  name: Safari Industries India Ltd
+  weight: 1.9
+- symbol: PRAJIND
+  name: Praj Industries Ltd
+  weight: 1.85
+- symbol: NAVINFLUOR
+  name: Navin Fluorine International Ltd
+  weight: 1.84
+- symbol: TEJASNET
+  name: Tejas Networks Ltd
+  weight: 1.8
+- symbol: KAYNES
+  name: Kaynes Technology India Ltd
+  weight: 1.8
+- symbol: COFORGE
+  name: Coforge Ltd
+  weight: 1.79
+- symbol: BLS
+  name: BLS International Services Ltd
+  weight: 1.75
+- symbol: CESC
+  name: CESC Ltd
+  weight: 1.7
+- symbol: ECLERX
+  name: eClerx Services Ltd
+  weight: 1.7
+- symbol: MEDANTA
+  name: Global Health Ltd
+  weight: 1.65
+- symbol: ENGINERSIN
+  name: Engineers India Ltd
+  weight: 1.6
+- symbol: ROUTE
+  name: Route Mobile Ltd
+  weight: 1.55
+- symbol: ANANDRATHI
+  name: Anand Rathi Wealth Ltd
+  weight: 1.55
+- symbol: GRAVITA
+  name: Gravita India Ltd
+  weight: 1.5
+- symbol: NEWGEN
+  name: Newgen Software Technologies Ltd
+  weight: 1.5
+- symbol: GRINDWELL
+  name: Grindwell Norton Ltd
+  weight: 1.45
+- symbol: APARINDS
+  name: Apar Industries Ltd
+  weight: 1.45
+- symbol: FINPIPE
+  name: Finolex Industries Ltd
+  weight: 1.4
+- symbol: TARC
+  name: TARC Ltd
+  weight: 1.35
+- symbol: KIRLOSENG
+  name: Kirloskar Oil Engines Ltd
+  weight: 1.35
+- symbol: CEATLTD
+  name: CEAT Ltd
+  weight: 1.3
+- symbol: PRICOLLTD
+  name: Pricol Ltd
+  weight: 1.3
+- symbol: HBLPOWER
+  name: HBL Power Systems Ltd
+  weight: 1.25
+- symbol: RATEGAIN
+  name: RateGain Travel Technologies Ltd
+  weight: 1.25
+- symbol: AAVAS
+  name: Aavas Financiers Ltd
+  weight: 1.2
+- symbol: IONEXCHANG
+  name: Ion Exchange India Ltd
+  weight: 1.2
+- symbol: DATAINFRA
+  name: Data Infrastructure Trust
+  weight: 1.15

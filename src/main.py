@@ -17,6 +17,8 @@ import yfinance as yf
 from upstox_client import search_instrument, ltp
 from telegram_notifier import send_nav_alert, is_telegram_configured
 from market_calendar import is_trading_day
+from holdings_loader import load_portfolio_holdings, get_portfolio_meta
+from holdings_scraper import update_fund_portfolio
 
 ROOT = Path(__file__).resolve().parents[1]
 load_dotenv(dotenv_path=ROOT / ".env", override=True)
@@ -224,9 +226,23 @@ def main():
         action="store_true",
         help="Force send Telegram alert regardless of the 1% threshold",
     )
+    parser.add_argument(
+        "--refresh-holdings",
+        dest="refresh_holdings",
+        action="store_true",
+        help="Scrape and update local fund holdings disclosures from online sources",
+    )
     args = parser.parse_args()
 
     c = cfg()
+    if args.refresh_holdings:
+        console.print("[bold yellow]Refreshing fund holdings disclosures from web sources...[/bold yellow]")
+        for f in c.get("funds", []):
+            k = f.get("key")
+            if k:
+                update_fund_portfolio(k)
+        console.print()
+
     use_fallback = bool(c.get("settings", {}).get("use_yfinance_fallback", True))
     threshold = float(c.get("settings", {}).get("signal_threshold_pct", 0.50))
     min_cov = float(c.get("settings", {}).get("min_coverage_pct", 15.0))
@@ -248,13 +264,22 @@ def main():
 
     for fund in c["funds"]:
         name = fund["name"]
+        fund_key = fund.get("key", "")
         configured_symbol = fund.get("symbol")
         console.print(f"[bold white]{name}[/bold white]")
 
         try:
-            yfund = configured_symbol or yahoo_search_fund(name)
-            holdings = yahoo_holdings(yfund)
-            console.print(f"  [dim]Yahoo Ticker:[/dim] {yfund} | [dim]Holdings Count:[/dim] {len(holdings)}")
+            # First check for local expanded portfolio disclosures
+            local_holdings = load_portfolio_holdings(fund_key) if fund_key else None
+            if local_holdings:
+                holdings = local_holdings
+                meta = get_portfolio_meta(fund_key)
+                as_of_str = f" [dim](As of {meta.get('as_of', 'Latest')})[/dim]" if meta.get("as_of") else ""
+                console.print(f"  [bold cyan]Disclosed Holdings:[/bold cyan] {len(holdings)} stocks{as_of_str} | [dim]Target Coverage: ~85-95%[/dim]")
+            else:
+                yfund = configured_symbol or yahoo_search_fund(name)
+                holdings = yahoo_holdings(yfund)
+                console.print(f"  [dim]Yahoo Ticker:[/dim] {yfund} | [dim]Holdings Count:[/dim] {len(holdings)} [dim](Fallback: Yahoo Top 10)[/dim]")
 
             mapping = build_mapping(holdings)
             prices_by_token = fetch_upstox_prices(mapping)
@@ -302,13 +327,13 @@ def main():
                 confidence = "LOW"
                 signal = "INSUFFICIENT COVERAGE"
             elif normalized_est <= -threshold:
-                confidence = "HIGH" if coverage >= 40 and upstox_weight >= 30 else "MEDIUM"
+                confidence = "HIGH" if coverage >= 50 and upstox_weight >= 40 else "MEDIUM"
                 signal = "DIP (LUMP SUM BUY)"
             elif normalized_est >= threshold:
-                confidence = "HIGH" if coverage >= 40 and upstox_weight >= 30 else "MEDIUM"
+                confidence = "HIGH" if coverage >= 50 and upstox_weight >= 40 else "MEDIUM"
                 signal = "SURGE (AVOID / SKIP)"
             else:
-                confidence = "MEDIUM" if coverage >= 40 else "LOW"
+                confidence = "HIGH" if coverage >= 60 and upstox_weight >= 50 else ("MEDIUM" if coverage >= 35 else "LOW")
                 signal = "NORMAL (NO TRIGGER)"
 
             conf_color = "green" if confidence == "HIGH" else ("yellow" if confidence == "MEDIUM" else "red")
@@ -402,7 +427,8 @@ def main():
     # Trigger Telegram Alert if configured
     if is_telegram_configured():
         alert_thresh = float(c.get("settings", {}).get("telegram_alert_threshold_pct", 1.00))
-        only_material = bool(c.get("settings", {}).get("telegram_only_on_material_move", True))
+        daily_digest = bool(c.get("settings", {}).get("telegram_send_daily_digest", False))
+        only_material = bool(c.get("settings", {}).get("telegram_only_on_material_move", True)) and not daily_digest
 
         sent, reason = send_nav_alert(
             fund_results_for_alert,
@@ -413,7 +439,7 @@ def main():
         )
 
         if sent:
-            console.print(f"[bold green][OK] Telegram lump-sum alert delivered (move >= {alert_thresh:.1f}% detected)![/bold green]\n")
+            console.print(f"[bold green][OK] Telegram alert delivered{' (Daily Digest)' if daily_digest else f' (move >= {alert_thresh:.1f}%)'}![/bold green]\n")
         elif reason == "NO_MATERIAL_MOVE":
             console.print(f"[dim][i] Telegram alert suppressed (no fund moved >= {alert_thresh:.1f}%). Everyday noise avoided.[/dim]\n")
         else:

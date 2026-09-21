@@ -42,15 +42,22 @@ def build_compact_message(fund_results: list[dict], checkpoint_time: str, thresh
     """
     try:
         ist = pytz.timezone("Asia/Kolkata")
-        now_ist = datetime.now(ist).strftime("%d-%b-%Y | %I:%M %p IST")
+        now_dt = datetime.now(ist)
+        now_time_str = now_dt.strftime("%I:%M %p IST")
+        now_date_str = now_dt.strftime("%d-%b-%Y")
+        is_late_run = now_dt.hour == 13 and now_dt.minute >= 35
+        urgency_tag = " [⏰ FINAL CUTOFF NOTICE]" if is_late_run else ""
     except Exception:
-        now_ist = datetime.now().strftime("%d-%b-%Y")
+        now_time_str = checkpoint_time
+        now_date_str = datetime.now().strftime("%d-%b-%Y")
+        urgency_tag = ""
 
     header = (
-        f"🎯 <b>MF DIP BUYER ALERT ({checkpoint_time} IST)</b>\n"
-        f"📅 <i>{now_ist}</i>\n"
+        f"🎯 <b>MF DIP BUYER ALERT ({now_time_str}){urgency_tag}</b>\n"
+        f"📅 <i>{now_date_str}</i>\n"
         "━━━━━━━━━━━━━━━━━━━━━━━━\n\n"
     )
+
 
     lines = []
     dip_buy_count = 0

@@ -1,0 +1,62 @@
+fund_name: Quant Multi Asset Allocation Fund Growth Option Direct Plan
+as_of: 2026-09-21 14:23 UTC
+holdings_count: 19
+total_weight: 86.94
+holdings:
+- symbol: ICICIBANK
+  name: ICICI Bank Ltd
+  weight: 9.36
+- symbol: RELIANCE
+  name: Reliance Industries Ltd
+  weight: 9.25
+- symbol: GOLDBEES
+  name: Nippon India ETF Gold BeES
+  weight: 8.51
+- symbol: BHARTIARTL
+  name: Bharti Airtel Ltd
+  weight: 8.36
+- symbol: ADANIENT
+  name: Adani Enterprises Ltd
+  weight: 7.42
+- symbol: ADANIGREEN
+  name: Adani Green Energy Ltd
+  weight: 6.92
+- symbol: AUROPHARMA
+  name: Aurobindo Pharma Ltd
+  weight: 4.47
+- symbol: HDFCLIFE
+  name: HDFC Life Insurance Co Ltd
+  weight: 3.62
+- symbol: INDUSTOWER
+  name: Indus Towers Ltd Ordinary Shares
+  weight: 3.46
+- symbol: ICICIAMC
+  name: ICICI Prudential Asset Management Co Ltd
+  weight: 3.19
+- symbol: SAIL
+  name: Steel Authority of India Ltd
+  weight: 2.8
+- symbol: JIOFIN
+  name: Jio Financial Services Ltd
+  weight: 2.75
+- symbol: '500312'
+  name: Oil & Natural Gas Corp Ltd
+  weight: 2.75
+- symbol: TATAPOWER
+  name: Tata Power Co Ltd
+  weight: 2.65
+- symbol: MOTHERSON
+  name: Samvardhana Motherson International Ltd
+  weight: 2.5
+- symbol: SWANENERGY
+  name: Swan Energy Ltd
+  weight: 2.45
+- symbol: IRCTC
+  name: Indian Railway Catering And Tourism Corporation Ltd
+  weight: 2.25
+- symbol: NMDC
+  name: NMDC Ltd
+  weight: 2.15
+- symbol: HDFCBANK
+  name: HDFC Bank Ltd
+  weight: 2.08

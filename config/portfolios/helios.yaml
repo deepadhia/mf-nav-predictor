@@ -1,0 +1,137 @@
+fund_name: Helios Flexi Cap Fund Direct Growth
+as_of: 2026-09-21 14:22 UTC
+holdings_count: 44
+total_weight: 94.97
+holdings:
+- symbol: HEXAWARE
+  name: Hexaware Technologies Ltd.
+  weight: 6.37
+- symbol: INDUSTOWER
+  name: Indus Towers Ltd.
+  weight: 5.83
+- symbol: BLACKBUCK
+  name: BlackBuck Ltd.
+  weight: 5.78
+- symbol: INFY
+  name: Infosys Ltd.
+  weight: 5.6
+- symbol: HFCL
+  name: HFCL Ltd.
+  weight: 4.73
+- symbol: ORACLE
+  name: Oracle Financial Services Software Ltd.
+  weight: 4.56
+- symbol: REDINGTON
+  name: Redington Ltd.
+  weight: 4.06
+- symbol: BLACK
+  name: Black Box Ltd.
+  weight: 3.98
+- symbol: DIGITIDE
+  name: Digitide Solutions Ltd.
+  weight: 3.88
+- symbol: LT
+  name: L&T Technology Services Ltd.
+  weight: 3.79
+- symbol: ETERNAL
+  name: Eternal Ltd
+  weight: 2.73
+- symbol: ICICIBANK
+  name: ICICI Bank Ltd
+  weight: 2.42
+- symbol: PAYTM
+  name: One97 Communications Ltd
+  weight: 2.35
+- symbol: ADANIPORTS
+  name: Adani Ports & Special Economic Zone Ltd
+  weight: 2.05
+- symbol: SBIN
+  name: State Bank of India
+  weight: 1.75
+- symbol: BAJFINANCE
+  name: Bajaj Finance Ltd
+  weight: 1.7
+- symbol: '500034'
+  name: Bajaj Finance Ltd
+  weight: 1.7
+- symbol: ATHERENERG
+  name: Ather Energy Ltd
+  weight: 1.65
+- symbol: ADANIENT
+  name: Adani Enterprises Ltd
+  weight: 1.62
+- symbol: HDFCBANK
+  name: HDFC Bank Ltd
+  weight: 1.61
+- symbol: TITAN
+  name: Titan Co Ltd
+  weight: 1.59
+- symbol: LTTS
+  name: L&T Technology Services Ltd
+  weight: 1.52
+- symbol: OFSS
+  name: Oracle Financial Services Software Ltd
+  weight: 1.43
+- symbol: BHARTIARTL
+  name: Bharti Airtel Ltd
+  weight: 1.39
+- symbol: TCS
+  name: Tata Consultancy Services Ltd
+  weight: 1.36
+- symbol: RELIANCE
+  name: Reliance Industries Ltd
+  weight: 1.33
+- symbol: AXISBANK
+  name: Axis Bank Ltd
+  weight: 1.3
+- symbol: KOTAKBANK
+  name: Kotak Mahindra Bank Ltd
+  weight: 1.27
+- symbol: SUNPHARMA
+  name: Sun Pharmaceutical Industries Ltd
+  weight: 1.21
+- symbol: ITC
+  name: ITC Ltd
+  weight: 1.18
+- symbol: TATAMOTORS
+  name: Tata Motors Ltd
+  weight: 1.15
+- symbol: HCLTECH
+  name: HCL Technologies Ltd
+  weight: 1.12
+- symbol: MARUTI
+  name: Maruti Suzuki India Ltd
+  weight: 1.08
+- symbol: ULTRACEMCO
+  name: UltraTech Cement Ltd
+  weight: 1.05
+- symbol: NTPC
+  name: NTPC Ltd
+  weight: 1.02
+- symbol: POWERGRID
+  name: Power Grid Corp of India Ltd
+  weight: 0.99
+- symbol: M&M
+  name: Mahindra & Mahindra Ltd
+  weight: 0.96
+- symbol: BAJAJFINSV
+  name: Bajaj Finserv Ltd
+  weight: 0.93
+- symbol: NESTLEIND
+  name: Nestle India Ltd
+  weight: 0.9
+- symbol: ASIANPAINT
+  name: Asian Paints Ltd
+  weight: 0.87
+- symbol: WIPRO
+  name: Wipro Ltd
+  weight: 0.84
+- symbol: COALINDIA
+  name: Coal India Ltd
+  weight: 0.81
+- symbol: TATASTEEL
+  name: Tata Steel Ltd
+  weight: 0.77
+- symbol: HINDUNILVR
+  name: Hindustan Unilever Ltd
+  weight: 0.74
