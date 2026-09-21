@@ -22,6 +22,7 @@ echo -e "${CYAN}================================================================
 
 # 1. Pull latest changes from origin main
 echo -e "${YELLOW}[1/4] Pulling latest code from origin main...${NC}"
+git stash >/dev/null 2>&1 || true
 git pull origin main
 
 # 2. Run automated server setup (venv, deps, crontabs, Groww seeding)
