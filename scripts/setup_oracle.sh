@@ -67,18 +67,17 @@ echo -e "${YELLOW}Fetching initial live portfolio disclosures from Groww...${NC}
 python3 src/holdings_scraper.py --fund all || true
 
 # 5. Configure Crontab:
-
 #    (a) Run 1: 1:00 PM IST (07:30 UTC Mon-Fri) - Early Dip Check
 #    (b) Run 2: 1:45 PM IST (08:15 UTC Mon-Fri) - Final Dip Check before 2:00 PM Cutoff
-#    (c) Monthly Portfolio Disclosures Auto-Refresher on 11th of every month (06:00 UTC)
+#    (c) Disclosures Auto-Refresher every 10 days (1st, 11th, 21st of each month at 06:00 UTC)
 #    Note: Telegram alert only fires if movement >= 1.0% (zero spam on normal days)
 echo -e "${YELLOW}[5/5] Configuring Crontab schedules (Two checks before 2 PM: 1:00 PM & 1:45 PM IST)...${NC}"
 CRON_RUN1_SCHEDULE="30 7 * * 1-5"
 CRON_RUN2_SCHEDULE="15 8 * * 1-5"
 CRON_DAILY_CMD="${PROJECT_ROOT}/scripts/mf_nav_cron.sh"
 
-CRON_MONTHLY_SCHEDULE="0 6 11 * *"
-CRON_MONTHLY_CMD="${PROJECT_ROOT}/.venv/bin/python ${PROJECT_ROOT}/src/holdings_scraper.py --fund all >> ${PROJECT_ROOT}/logs/scraper_\$(date +\\%Y-\\%m).log 2>&1"
+CRON_REFRESH_SCHEDULE="0 6 1,11,21 * *"
+CRON_REFRESH_CMD="${PROJECT_ROOT}/.venv/bin/python ${PROJECT_ROOT}/src/holdings_scraper.py --fund all >> ${PROJECT_ROOT}/logs/scraper_\$(date +\\%Y-\\%m).log 2>&1"
 
 CURRENT_CRON=$(crontab -l 2>/dev/null || true)
 NEW_CRON="${CURRENT_CRON}"
@@ -86,11 +85,11 @@ NEW_CRON="${CURRENT_CRON}"
 # Remove any old single schedule
 NEW_CRON=$(echo "${NEW_CRON}" | grep -v "mf_nav_cron.sh" | grep -v "holdings_scraper.py" || true)
 
-NEW_CRON=$(echo -e "${NEW_CRON}\n# Run 1: MF Intraday Predictor at 1:00 PM IST (Mon-Fri)\n${CRON_RUN1_SCHEDULE} ${CRON_DAILY_CMD}\n# Run 2: MF Intraday Predictor at 1:45 PM IST (Mon-Fri) - Final Cutoff Check\n${CRON_RUN2_SCHEDULE} ${CRON_DAILY_CMD}\n# Auto-refresh mutual fund disclosures on the 11th of each month\n${CRON_MONTHLY_SCHEDULE} ${CRON_MONTHLY_CMD}")
+NEW_CRON=$(echo -e "${NEW_CRON}\n# Run 1: MF Intraday Predictor at 1:00 PM IST (Mon-Fri)\n${CRON_RUN1_SCHEDULE} ${CRON_DAILY_CMD}\n# Run 2: MF Intraday Predictor at 1:45 PM IST (Mon-Fri) - Final Cutoff Check\n${CRON_RUN2_SCHEDULE} ${CRON_DAILY_CMD}\n# Auto-refresh mutual fund disclosures every 10 days (1st, 11th, 21st)\n${CRON_REFRESH_SCHEDULE} ${CRON_REFRESH_CMD}")
 
 echo -e "${GREEN}[OK] Added Crontab Check 1 (1:00 PM IST / 07:30 UTC)${NC}"
 echo -e "${GREEN}[OK] Added Crontab Check 2 (1:45 PM IST / 08:15 UTC)${NC}"
-echo -e "${GREEN}[OK] Added Monthly Auto-Refresh (11th of every month)${NC}"
+echo -e "${GREEN}[OK] Added Disclosures Auto-Refresh (Every 10 days: 1st, 11th, 21st of month)${NC}"
 
 echo "${NEW_CRON}" | sed '/^$/N;/^\n$/D' | crontab -
 

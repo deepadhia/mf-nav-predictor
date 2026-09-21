@@ -45,5 +45,5 @@ echo -e "${GREEN}  DEPLOYMENT SUCCESSFUL & FULLY ACTIVE!                        
 echo -e "${GREEN}==================================================================${NC}\n"
 echo -e "• ${CYAN}Check 1:${NC} 1:00 PM IST (07:30 UTC) Mon–Fri"
 echo -e "• ${CYAN}Check 2:${NC} 1:45 PM IST (08:15 UTC) Mon–Fri"
-echo -e "• ${CYAN}Monthly Auto-Refresh:${NC} 11th of every month (06:00 UTC)"
+echo -e "• ${CYAN}Auto-Refresh Disclosures:${NC} Every 10 days (1st, 11th, 21st at 06:00 UTC)"
 echo -e "• ${CYAN}Logs:${NC} ${PROJECT_ROOT}/logs/nav_\$(date +'%Y-%m-%d').log\n"

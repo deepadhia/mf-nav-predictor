@@ -15,7 +15,7 @@ console = Console()
 
 
 # Number of days after which local portfolio disclosure is considered stale
-MAX_PORTFOLIO_AGE_DAYS = 15
+MAX_PORTFOLIO_AGE_DAYS = 10
 
 def is_portfolio_stale(file_path: Path, max_age_days: int = MAX_PORTFOLIO_AGE_DAYS) -> bool:
     """Returns True if the portfolio file does not exist or is older than max_age_days."""
