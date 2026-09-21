@@ -1,10 +1,12 @@
 name: Mutual Fund Intraday NAV Alert
 
+# NOTE: Scheduled cron is disabled on GitHub Actions.
+# Automated scheduling is handled with 100% precision on your dedicated Oracle Cloud instance.
+# Manual trigger via workflow_dispatch remains available.
 on:
-  schedule:
-    # 07:50 UTC is 1:20 PM IST (Monday - Friday)
-    - cron: '50 7 * * 1-5'
-  workflow_dispatch: # Allows manual trigger from GitHub web / mobile app
+  # schedule:
+  #   - cron: '50 7 * * 1-5'
+  workflow_dispatch: # Allows manual trigger from GitHub web / mobile app if ever needed
 
 jobs:
   check-nav:

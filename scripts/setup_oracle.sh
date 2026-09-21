@@ -62,7 +62,12 @@ else
     echo -e "${GREEN}[OK] .env file detected.${NC}"
 fi
 
+# Seed initial mutual fund disclosures from Groww
+echo -e "${YELLOW}Fetching initial live portfolio disclosures from Groww...${NC}"
+python3 src/holdings_scraper.py --fund all || true
+
 # 5. Configure Crontab:
+
 #    (a) Run 1: 1:00 PM IST (07:30 UTC Mon-Fri) - Early Dip Check
 #    (b) Run 2: 1:45 PM IST (08:15 UTC Mon-Fri) - Final Dip Check before 2:00 PM Cutoff
 #    (c) Monthly Portfolio Disclosures Auto-Refresher on 11th of every month (06:00 UTC)
