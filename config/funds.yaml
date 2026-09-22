@@ -13,7 +13,7 @@ funds:
     symbol: "0P0000XW4C.BO"
 
 settings:
-  checkpoint_time: "13:30"
+  checkpoint_time: "14:30"
   # Upstox API can quote up to 500 instruments per request.
   batch_size: 200
   signal_threshold_pct: 1.00

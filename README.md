@@ -1,34 +1,46 @@
 # Mutual Fund Intraday NAV Predictor & Dip-Buyer Alert
 
-A lightweight, automated personal tool for calculating likely intraday NAV pressure across your mutual funds around **1:20 PM IST** (before the 2:00 PM / 3:00 PM AMC order cutoffs) to make informed lump-sum buy decisions.
+A lightweight, automated personal tool for calculating likely intraday NAV pressure across your mutual funds around **2:30 PM IST** (before the 3:00 PM same-day NAV cut-off) to make informed lump-sum buy decisions.
 
 ---
 
 ## 🚀 Key Features
 
-* **High Coverage (85%–95%) & HIGH Confidence**: Uses expanded fund portfolio disclosures across 30–50 holdings per fund instead of the standard 10-stock API limit.
+* **High Coverage (85%–95%) & HIGH Confidence**: Uses expanded fund portfolio disclosures across 30–70 holdings per fund instead of standard top-10 limits.
 * **Auto-Refreshing Disclosures**: Automatically fetches and updates monthly SEBI portfolio releases on-the-fly and via scheduled cron.
 * **Ultra-Fast Upstox V3 Batch Pricing**: Queries real-time LTP and previous close for 150+ stocks simultaneously in <100ms.
 * **Seamless Fallback**: Automatically falls back to `yfinance` history if an instrument key is unmapped or broker token expires.
 * **Actionable Telegram Alerts**: Delivers color-coded daily status digests and Dip-Buying alerts (`🟢 BUY DIP`, `⚪ NORMAL`, `🛑 DO NOT BUY (Surging)`) directly to your Telegram.
+* **30-Day Automated Accuracy Tracking**: Logs predictions and reconciles them nightly against official AMC published NAVs with Mean Absolute Error (MAE), RMSE, and Directional Hit Rates.
 * **Zero-Cost Oracle Cloud VM Ready**: Fully automated 1-click installer and Linux crontab scheduler.
 
 ---
 
-## 🏛️ Architecture
+## 🏛️ Architecture & Schedules
 
-```mermaid
-graph TD
-    A[Linux Cron at 1:20 PM IST / 07:50 UTC] --> B[src/main.py]
-    B --> C[src/holdings_loader.py]
-    C --> D{Holdings Stale > 15 days?}
-    D -- Yes --> E[src/holdings_scraper.py Auto-Refresh]
-    D -- No --> F[Load config/portfolios/*.yaml]
-    E --> F
-    F --> G[Upstox V3 Batch Quote API: 50ms]
-    G --> H[Weighted Contribution Engine]
-    H --> I[85%-95% Coverage & HIGH Confidence]
-    I --> J[Telegram Alert Dispatcher]
+* **Check 1 (Early Pulse Check):** 1:30 PM IST (`08:00 UTC` Mon–Fri)
+* **Check 2 (Final Decision Check):** 2:30 PM IST (`09:00 UTC` Mon–Fri, 30 min before 3:00 PM SEBI cut-off)
+* **Nightly Accuracy Audit:** 11:30 PM IST (`18:00 UTC` Mon–Fri)
+* **Disclosures Auto-Refresh:** Every 10 days (1st, 11th, 21st of each month at `06:00 UTC`)
+
+---
+
+## 🛠️ Accuracy & Audit Commands
+
+### 1. View 30-Day Accuracy Report
+To inspect overall and per-fund prediction accuracy (MAE in bps, RMSE, Directional Hit %):
+```bash
+python src/accuracy_report.py
+```
+*Optional filters:*
+```bash
+python src/accuracy_report.py --days 14
+python src/accuracy_report.py --fund helios
+```
+
+### 2. Run Nightly Reconciliation Manually
+```bash
+python src/reconciler.py
 ```
 
 ---
@@ -66,33 +78,13 @@ python src/main.py
 
 ---
 
-## ☁️ Deploy to Oracle Cloud Instance (OCI)
+## ☁️ Deploy / Update on Oracle Cloud Instance (OCI)
 
-Deploying to an Oracle Cloud VM provides 100% reliable scheduling at 1:20 PM IST, completely independent of GitHub Actions queue drops.
-
-### Step 1: Clone onto your Oracle Server
+To deploy or update your Oracle Cloud VM instance:
 ```bash
-git clone <your-repo-url> ~/MFNAVTracker
 cd ~/MFNAVTracker
+./scripts/deploy.sh
 ```
-
-### Step 2: Configure `.env`
-```bash
-cp .env.example .env
-nano .env
-```
-
-### Step 3: Run One-Click Setup
-```bash
-chmod +x scripts/setup_oracle.sh
-./scripts/setup_oracle.sh
-```
-
-**What this automatically sets up:**
-1. Creates Python `.venv` and installs all dependencies.
-2. Configures **Daily Intraday Cron** (`50 7 * * 1-5` $\rightarrow$ 1:20 PM IST Monday–Friday).
-3. Configures **Monthly Holdings Auto-Refresh Cron** (`0 6 11 * *` $\rightarrow$ 11th of every month at 06:00 UTC).
-4. Stores date-stamped execution logs in `logs/nav_YYYY-MM-DD.log`.
 
 ---
 
@@ -108,6 +100,6 @@ Configured in `config/funds.yaml`:
 
 ## 💡 Lump Sum Strategy Guidelines
 
-* **🟢 DIP DETECTED ($\le -1.0\%$):** Portfolio is under severe downward pressure. Deploy lump sum before 2:00 PM to lock in today's discounted NAV.
+* **🟢 DIP DETECTED ($\le -1.0\%$):** Portfolio is under severe downward pressure. Deploy lump sum before 3:00 PM to lock in today's discounted NAV.
 * **⚪ NORMAL RANGE ($-1.0\%$ to $+1.0\%$):** Normal market movement. No urgent lump sum trigger.
 * **🛑 SURGE / PEAK ($\ge +1.0\%$):** Market is expensive today. Skip lump sum at intraday peaks.

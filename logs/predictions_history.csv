@@ -1,0 +1,9 @@
+date,timestamp_ist,fund_key,fund_name,estimated_nav_pct,raw_contrib_pct,coverage_pct,upstox_pct,confidence,signal
+2026-09-21,2026-09-22 22:47:07,helios,Helios Flexi Cap Fund Direct Growth,-0.16,-0.14,96.2,96.2,HIGH,NORMAL (NO TRIGGER)
+2026-09-21,2026-09-22 22:47:07,motilal_midcap,Motilal Oswal Midcap Fund Direct Growth,-0.06,-0.06,96.4,96.4,HIGH,NORMAL (NO TRIGGER)
+2026-09-21,2026-09-22 22:47:07,quant_multiasset,Quant Multi Asset Allocation Fund Growth Option Direct Plan,-0.41,-0.30,79.8,79.0,HIGH,NORMAL (NO TRIGGER)
+2026-09-21,2026-09-22 22:47:07,trust_smallcap,TrustMF Small Cap Fund Direct Growth,-0.02,-0.02,93.5,93.5,HIGH,NORMAL (NO TRIGGER)
+2026-09-22,2026-09-22 22:46:52,helios,Helios Flexi Cap Fund Direct Growth,0.15,0.14,96.2,96.2,HIGH,NORMAL (NO TRIGGER)
+2026-09-22,2026-09-22 22:46:52,motilal_midcap,Motilal Oswal Midcap Fund Direct Growth,0.33,0.32,96.4,96.4,HIGH,NORMAL (NO TRIGGER)
+2026-09-22,2026-09-22 22:46:52,quant_multiasset,Quant Multi Asset Allocation Fund Growth Option Direct Plan,-0.01,-0.01,79.8,79.0,HIGH,NORMAL (NO TRIGGER)
+2026-09-22,2026-09-22 22:46:52,trust_smallcap,TrustMF Small Cap Fund Direct Growth,0.42,0.40,93.5,93.5,HIGH,NORMAL (NO TRIGGER)

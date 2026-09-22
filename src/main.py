@@ -19,6 +19,7 @@ from telegram_notifier import send_nav_alert, is_telegram_configured
 from market_calendar import is_trading_day
 from holdings_loader import load_portfolio_holdings, get_portfolio_meta
 from holdings_scraper import update_fund_portfolio
+from reconciler import save_prediction_history
 
 ROOT = Path(__file__).resolve().parents[1]
 load_dotenv(dotenv_path=ROOT / ".env", override=True)
@@ -371,6 +372,7 @@ def main():
 
             summary.append((name, normalized_est, raw_contrib, coverage, upstox_weight, confidence, signal))
             fund_results_for_alert.append({
+                "fund_key": fund_key,
                 "name": name,
                 "normalized_est": normalized_est,
                 "raw_contrib": raw_contrib,
@@ -385,6 +387,7 @@ def main():
             console.print(f"  [red]ERROR: {e}[/red]\n")
             summary.append((name, None, None, 0, 0, "LOW", "ERROR"))
             fund_results_for_alert.append({
+                "fund_key": fund_key,
                 "name": name,
                 "normalized_est": None,
                 "raw_contrib": 0,
@@ -394,6 +397,12 @@ def main():
                 "signal": "ERROR",
                 "contributors": [],
             })
+
+    # Record intraday prediction snapshot for automated 30-day accuracy reconciliation
+    try:
+        save_prediction_history(fund_results_for_alert)
+    except Exception as e:
+        console.print(f"[yellow]Warning: Could not record prediction history: {e}[/yellow]")
 
     table = Table(title="MUTUAL FUND ESTIMATED NAV DECISION SUMMARY")
     table.add_column("Fund", style="bold white")
