@@ -1,86 +1,140 @@
-# Mutual Fund Intraday NAV Predictor & Dip-Buyer Alert
+# Mutual Fund Intraday NAV Predictor & Automated Dip-Buyer
 
-A lightweight, automated personal tool for calculating likely intraday NAV pressure across your mutual funds around **2:30 PM IST** (before the 3:00 PM same-day NAV cut-off) to make informed lump-sum buy decisions.
-
----
-
-## 🚀 Key Features
-
-* **High Coverage (85%–95%) & HIGH Confidence**: Uses expanded fund portfolio disclosures across 30–70 holdings per fund instead of standard top-10 limits.
-* **Auto-Refreshing Disclosures**: Automatically fetches and updates monthly SEBI portfolio releases on-the-fly and via scheduled cron.
-* **Ultra-Fast Upstox V3 Batch Pricing**: Queries real-time LTP and previous close for 150+ stocks simultaneously in <100ms.
-* **Seamless Fallback**: Automatically falls back to `yfinance` history if an instrument key is unmapped or broker token expires.
-* **Actionable Telegram Alerts**: Delivers color-coded daily status digests and Dip-Buying alerts (`🟢 BUY DIP`, `⚪ NORMAL`, `🛑 DO NOT BUY (Surging)`) directly to your Telegram.
-* **30-Day Automated Accuracy Tracking**: Logs predictions and reconciles them nightly against official AMC published NAVs with Mean Absolute Error (MAE), RMSE, and Directional Hit Rates.
-* **Zero-Cost Oracle Cloud VM Ready**: Fully automated 1-click installer and Linux crontab scheduler.
+A high-precision, automated system for tracking intraday Mutual Fund NAV movement at **2:30 PM IST** (30 minutes before the 3:00 PM SEBI same-day NAV cut-off) to inform lump-sum buy decisions with real-time Upstox V3 pricing, historical portfolio disclosures, and automated 30-day accuracy reconciliation.
 
 ---
 
-## 🏛️ Architecture & Schedules
+## 🚀 Key Highlights
 
-* **Check 1 (Early Pulse Check):** 1:30 PM IST (`08:00 UTC` Mon–Fri)
-* **Check 2 (Final Decision Check):** 2:30 PM IST (`09:00 UTC` Mon–Fri, 30 min before 3:00 PM SEBI cut-off)
-* **Nightly Accuracy Audit:** 11:30 PM IST (`18:00 UTC` Mon–Fri)
-* **Disclosures Auto-Refresh:** Every 10 days (1st, 11th, 21st of each month at `06:00 UTC`)
+* **High Portfolio Coverage (85%–96%) & HIGH Confidence**: Evaluates 30–70 disclosed equity/ETF holdings per fund rather than standard top-10 limitations.
+* **Auto-Refreshing Disclosures**: Automatically fetches and maintains monthly SEBI portfolio releases via Groww SSR state.
+* **Sub-Second Upstox V3 Batch Pricing**: Fetches real-time LTP and previous close for 150+ stocks simultaneously via multi-token batching.
+* **Intelligent Redundancy**: Falls back to `yfinance` daily bars if an instrument mapping or token expires.
+* **Noise-Filtered Telegram Alerts**: Suppresses everyday noise and only alerts when actionable moves occur ($\ge \pm 1.0\%$).
+* **Automated 30-Day Accuracy Tracking**: Logs all predictions and reconciles them nightly at 11:30 PM IST against official AMC published closing NAVs (calculating Mean Absolute Error in basis points, RMSE, and Directional Hit %).
+* **Zero-Cost 24/7 Automation**: One-command deployment script for Oracle Cloud Always-Free VM crontabs.
 
 ---
 
-## 🛠️ Accuracy & Audit Commands
+## 🏛️ System Architecture
 
-### 1. View 30-Day Accuracy Report
-To inspect overall and per-fund prediction accuracy (MAE in bps, RMSE, Directional Hit %):
-```bash
-python src/accuracy_report.py
+```mermaid
+graph TD
+    subgraph Intraday Prediction Pipeline [2:30 PM IST / 09:00 UTC]
+        A[Crontab Trigger] --> B[src/main.py]
+        B --> C[src/holdings_loader.py]
+        C --> D{Holdings Stale > 15 days?}
+        D -- Yes --> E[src/holdings_scraper.py Auto-Refresh]
+        D -- No --> F[Load Portfolio Disclosures]
+        E --> F
+        F --> G[Upstox V3 Batch Quote API]
+        G --> H[Weighted NAV Contribution Engine]
+        H --> I[logs/predictions_history.csv]
+        H --> J{Move >= 1.0%?}
+        J -- Yes --> K[Telegram Alert: BUY DIP / SURGE]
+        J -- No --> L[Suppress Noise / Log Clean Run]
+    end
+
+    subgraph Nightly Reconciliation Pipeline [11:30 PM IST / 18:00 UTC]
+        M[Nightly Cron Trigger] --> N[src/reconciler.py]
+        N --> O[Fetch Official AMC Published NAVs]
+        O --> P[Calculate Spread, MAE bps, Directional Match]
+        P --> Q[(logs/accuracy_tracker.csv)]
+    end
+
+    subgraph Analytics & Reporting
+        Q --> R[src/accuracy_report.py]
+        R --> S[Terminal Executive KPI Dashboard]
+    end
 ```
-*Optional filters:*
+
+---
+
+## ⏰ Schedule & Cut-Off Logic
+
+Under SEBI regulations, equity and hybrid mutual fund orders placed and authorized before **3:00 PM IST** receive that day's closing NAV.
+
+| Schedule | IST Time | UTC Time | Purpose |
+| :--- | :---: | :---: | :--- |
+| **Check 1 (Pulse)** | **1:30 PM** | `08:00 UTC` | Early trend snapshot |
+| **Check 2 (Decision)** | **2:30 PM** | `09:00 UTC` | Final calculation (30-min window before 3:00 PM cut-off) |
+| **Nightly Reconciler** | **11:30 PM** | `18:00 UTC` | Audits predictions against published AMC NAVs |
+| **Disclosures Refresh** | 1st, 11th, 21st | `06:00 UTC` | Scrapes latest monthly portfolio disclosures |
+
+---
+
+## 🛠️ CLI Utilities & Commands
+
+### 1. Run Intraday Predictor Manually
 ```bash
+# Standard run (respects market hours & holidays)
+python src/main.py
+
+# Force run (useful after-hours or on weekends)
+python src/main.py --force
+
+# Force test a Telegram alert delivery
+python src/main.py --force --force-alert
+
+# Refresh portfolio disclosures immediately from web sources
+python src/main.py --refresh-holdings
+```
+
+### 2. View 30-Day Accuracy Report
+Computes rolling Directional Accuracy (%), Mean Absolute Error (MAE in basis points & %), Root Mean Square Error (RMSE), and per-fund breakdowns:
+```bash
+# Default: Past 30 days
+python src/accuracy_report.py
+
+# Filter by time window or specific fund
 python src/accuracy_report.py --days 14
 python src/accuracy_report.py --fund helios
+python src/accuracy_report.py --fund motilal_midcap
 ```
 
-### 2. Run Nightly Reconciliation Manually
+### 3. Run Nightly Reconciliation
+Manually reconcile un-audited historical predictions against official AMFI/Yahoo NAVs:
 ```bash
 python src/reconciler.py
 ```
 
+### 4. Scrape Portfolio Disclosures
+```bash
+# Scrape all configured funds
+python src/holdings_scraper.py --fund all
+
+# Scrape a specific fund
+python src/holdings_scraper.py --fund helios
+```
+
 ---
 
-## 🛠️ Quick Local Setup
+## 📁 Tracked Funds Configuration
 
-### 1. Configure `.env`
-Copy `.env.example` to `.env` and fill your credentials:
+Fund definitions are configured in [`config/funds.yaml`](config/funds.yaml):
+
+| Fund Key | Fund Name | Portfolio File |
+| :--- | :--- | :--- |
+| `helios` | Helios Flexi Cap Fund Direct Growth | `config/portfolios/helios.yaml` |
+| `motilal_midcap` | Motilal Oswal Midcap Fund Direct Growth | `config/portfolios/motilal_midcap.yaml` |
+| `trust_smallcap` | TrustMF Small Cap Fund Direct Growth | `config/portfolios/trust_smallcap.yaml` |
+| `quant_multiasset` | Quant Multi Asset Allocation Fund Direct Plan | `config/portfolios/quant_multiasset.yaml` |
+
+---
+
+## ☁️ Oracle Cloud VM Deployment
+
+### 1. Fresh Installation
 ```bash
+git clone <your-repo-url> ~/MFNAVTracker
+cd ~/MFNAVTracker
 cp .env.example .env
-```
-Fill:
-```text
-UPSTOX_API_KEY=...
-UPSTOX_API_SECRET=...
-UPSTOX_ACCESS_TOKEN=...
-TELEGRAM_ENABLED=true
-TELEGRAM_BOT_TOKEN=...
-TELEGRAM_CHAT_ID=...
+nano .env   # Configure Upstox and Telegram credentials
+chmod +x scripts/setup_oracle.sh
+./scripts/setup_oracle.sh
 ```
 
-### 2. Install Dependencies
-```bash
-python -m venv .venv
-source .venv/bin/activate  # On Windows: .venv\Scripts\activate
-pip install -r requirements.txt
-```
-
-### 3. Run Predictor
-```bash
-python src/main.py
-```
-*Use `--force` to run outside market hours or on holidays.*
-*Use `--refresh-holdings` to scrape the latest online disclosures immediately.*
-
----
-
-## ☁️ Deploy / Update on Oracle Cloud Instance (OCI)
-
-To deploy or update your Oracle Cloud VM instance:
+### 2. One-Command Update (Pulls & Updates Crons)
 ```bash
 cd ~/MFNAVTracker
 ./scripts/deploy.sh
@@ -88,18 +142,10 @@ cd ~/MFNAVTracker
 
 ---
 
-## 📊 Tracked Funds & Portfolio Config
+## 💡 Strategy Decision Matrix
 
-Configured in `config/funds.yaml`:
-* **Helios Flexi Cap Fund Direct Growth** (`config/portfolios/helios.yaml`)
-* **Motilal Oswal Midcap Fund Direct Growth** (`config/portfolios/motilal_midcap.yaml`)
-* **TrustMF Small Cap Fund Direct Growth** (`config/portfolios/trust_smallcap.yaml`)
-* **Quant Multi Asset Allocation Fund Direct Plan** (`config/portfolios/quant_multiasset.yaml`)
-
----
-
-## 💡 Lump Sum Strategy Guidelines
-
-* **🟢 DIP DETECTED ($\le -1.0\%$):** Portfolio is under severe downward pressure. Deploy lump sum before 3:00 PM to lock in today's discounted NAV.
-* **⚪ NORMAL RANGE ($-1.0\%$ to $+1.0\%$):** Normal market movement. No urgent lump sum trigger.
-* **🛑 SURGE / PEAK ($\ge +1.0\%$):** Market is expensive today. Skip lump sum at intraday peaks.
+| Signal | Intraday NAV Estimate | Action |
+| :--- | :---: | :--- |
+| 🟢 **DIP DETECTED** | $\le -1.0\%$ | **Lump-Sum Buy:** Deploy capital before 3:00 PM to capture discounted closing NAV. |
+| ⚪ **NORMAL RANGE** | $-1.0\%$ to $+1.0\%$ | **Hold / Skip:** Routine market volatility; no urgent lump-sum opportunity. |
+| 🛑 **SURGE DETECTED** | $\ge +1.0\%$ | **Avoid Lump-Sum:** Market is surging; avoid buying into temporary intraday peaks. |
