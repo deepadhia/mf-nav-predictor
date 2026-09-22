@@ -86,8 +86,8 @@ CRON_REFRESH_CMD="${PROJECT_ROOT}/.venv/bin/python ${PROJECT_ROOT}/src/holdings_
 CURRENT_CRON=$(crontab -l 2>/dev/null || true)
 NEW_CRON="${CURRENT_CRON}"
 
-# Remove any old schedules
-NEW_CRON=$(echo "${NEW_CRON}" | grep -v "mf_nav_cron.sh" | grep -v "holdings_scraper.py" | grep -v "reconciler.py" || true)
+# Remove any old schedules and comments
+NEW_CRON=$(echo "${NEW_CRON}" | grep -v "mf_nav_cron.sh" | grep -v "holdings_scraper.py" | grep -v "reconciler.py" | grep -v "# Run 1: MF" | grep -v "# Run 2: MF" | grep -v "# Nightly NAV" | grep -v "# Auto-refresh mutual fund" || true)
 
 NEW_CRON=$(echo -e "${NEW_CRON}\n# Run 1: MF Intraday Predictor at 1:30 PM IST (Mon-Fri)\n${CRON_RUN1_SCHEDULE} ${CRON_DAILY_CMD}\n# Run 2: MF Intraday Predictor at 2:30 PM IST (Mon-Fri) - Final Cutoff Check\n${CRON_RUN2_SCHEDULE} ${CRON_DAILY_CMD}\n# Nightly NAV Accuracy Reconciler at 11:30 PM IST (Mon-Fri)\n${CRON_RECONCILE_SCHEDULE} ${CRON_RECONCILE_CMD}\n# Auto-refresh mutual fund disclosures every 10 days (1st, 11th, 21st)\n${CRON_REFRESH_SCHEDULE} ${CRON_REFRESH_CMD}")
 
