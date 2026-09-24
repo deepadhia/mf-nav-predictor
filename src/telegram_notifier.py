@@ -37,7 +37,7 @@ def has_material_move(fund_results: list[dict], threshold: float = 1.0) -> bool:
 def build_compact_message(fund_results: list[dict], checkpoint_time: str, threshold: float) -> str:
     """
     Builds a compact, actionable Buy-the-Dip lump-sum decision message:
-    - Bigger Dip (<= -1%): BUY DIP TODAY before 2 PM to capture discount.
+    - Bigger Dip (<= -1%): BUY DIP TODAY before 2:30 PM to capture discount.
     - Surge/Rally (>= +1%): AVOID / DO NOT BUY at highs.
     """
     try:
@@ -45,8 +45,8 @@ def build_compact_message(fund_results: list[dict], checkpoint_time: str, thresh
         now_dt = datetime.now(ist)
         now_time_str = now_dt.strftime("%I:%M %p IST")
         now_date_str = now_dt.strftime("%d-%b-%Y")
-        is_late_run = now_dt.hour == 13 and now_dt.minute >= 35
-        urgency_tag = " [⏰ FINAL CUTOFF NOTICE]" if is_late_run else ""
+        is_late_run = now_dt.hour == 14 and now_dt.minute >= 10
+        urgency_tag = " [⏰ FINAL 2:30 PM CUTOFF NOTICE]" if is_late_run else ""
     except Exception:
         now_time_str = checkpoint_time
         now_date_str = datetime.now().strftime("%d-%b-%Y")
@@ -76,7 +76,7 @@ def build_compact_message(fund_results: list[dict], checkpoint_time: str, thresh
 
         # Dip Buying Strategy:
         if est <= -threshold:
-            lines.append(f"🟢 <b>{name}:</b> <code>{est_str}</code> ➔ <b>BUY DIP TODAY</b> (before 2 PM)")
+            lines.append(f"🟢 <b>{name}:</b> <code>{est_str}</code> ➔ <b>BUY DIP TODAY</b> (before 2:30 PM)")
             dip_buy_count += 1
         elif est >= threshold:
             lines.append(f"🛑 <b>{name}:</b> <code>{est_str}</code> ➔ <b>DO NOT BUY</b> (Surging / Peak)")
@@ -89,7 +89,7 @@ def build_compact_message(fund_results: list[dict], checkpoint_time: str, thresh
     # Actionable summary note
     advice_lines = []
     if dip_buy_count > 0:
-        advice_lines.append(f"• <b>DIP DETECTED (🟢 &le; -{threshold:.1f}%):</b> Buy before 2:00 PM to lock in today's discounted NAV.")
+        advice_lines.append(f"• <b>DIP DETECTED (🟢 &le; -{threshold:.1f}%):</b> Buy before 2:30 PM to lock in today's discounted NAV.")
     if surge_count > 0:
         advice_lines.append(f"• <b>SURGE DETECTED (🛑 &ge; +{threshold:.1f}%):</b> Market expensive today. Skip lump sum at peaks.")
     if not advice_lines:
@@ -104,7 +104,7 @@ def build_compact_message(fund_results: list[dict], checkpoint_time: str, thresh
 
 def send_nav_alert(
     fund_results: list[dict],
-    checkpoint_time: str = "13:30",
+    checkpoint_time: str = "14:15",
     threshold: float = 1.0,
     only_on_material: bool = True,
     force: bool = False

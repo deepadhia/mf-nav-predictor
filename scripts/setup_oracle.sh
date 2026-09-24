@@ -67,14 +67,14 @@ echo -e "${YELLOW}Fetching initial live portfolio disclosures from Groww...${NC}
 python3 src/holdings_scraper.py --fund all || true
 
 # 5. Configure Crontab:
-#    (a) Run 1: 1:30 PM IST (08:00 UTC Mon-Fri) - Early Pulse Check
-#    (b) Run 2: 2:30 PM IST (09:00 UTC Mon-Fri) - Final Check before 3:00 PM Same-Day Cutoff
+#    (a) Run 1: 2:00 PM IST (08:30 UTC Mon-Fri) - 30-Min Pre-Cutoff Check
+#    (b) Run 2: 2:15 PM IST (08:45 UTC Mon-Fri) - Final Check before 2:30 PM Cutoff
 #    (c) Nightly Accuracy Reconciliation: 11:30 PM IST (18:00 UTC Mon-Fri) - Audits actual published NAVs
 #    (d) Disclosures Auto-Refresher every 10 days (1st, 11th, 21st of each month at 06:00 UTC)
 #    Note: Telegram alert only fires if movement >= 1.0% (zero spam on normal days)
-echo -e "${YELLOW}[5/5] Configuring Crontab schedules (1:30 PM, 2:30 PM Cutoff & 11:30 PM Nightly Reconciler)...${NC}"
-CRON_RUN1_SCHEDULE="0 8 * * 1-5"
-CRON_RUN2_SCHEDULE="0 9 * * 1-5"
+echo -e "${YELLOW}[5/5] Configuring Crontab schedules (2:00 PM, 2:15 PM Cutoff & 11:30 PM Nightly Reconciler)...${NC}"
+CRON_RUN1_SCHEDULE="30 8 * * 1-5"
+CRON_RUN2_SCHEDULE="45 8 * * 1-5"
 CRON_DAILY_CMD="${PROJECT_ROOT}/scripts/mf_nav_cron.sh"
 
 CRON_RECONCILE_SCHEDULE="0 18 * * 1-5"
@@ -89,10 +89,10 @@ NEW_CRON="${CURRENT_CRON}"
 # Remove any old schedules and comments
 NEW_CRON=$(echo "${NEW_CRON}" | grep -v "mf_nav_cron.sh" | grep -v "holdings_scraper.py" | grep -v "reconciler.py" | grep -v "# Run 1: MF" | grep -v "# Run 2: MF" | grep -v "# Nightly NAV" | grep -v "# Auto-refresh mutual fund" || true)
 
-NEW_CRON=$(echo -e "${NEW_CRON}\n# Run 1: MF Intraday Predictor at 1:30 PM IST (Mon-Fri)\n${CRON_RUN1_SCHEDULE} ${CRON_DAILY_CMD}\n# Run 2: MF Intraday Predictor at 2:30 PM IST (Mon-Fri) - Final Cutoff Check\n${CRON_RUN2_SCHEDULE} ${CRON_DAILY_CMD}\n# Nightly NAV Accuracy Reconciler at 11:30 PM IST (Mon-Fri)\n${CRON_RECONCILE_SCHEDULE} ${CRON_RECONCILE_CMD}\n# Auto-refresh mutual fund disclosures every 10 days (1st, 11th, 21st)\n${CRON_REFRESH_SCHEDULE} ${CRON_REFRESH_CMD}")
+NEW_CRON=$(echo -e "${NEW_CRON}\n# Run 1: MF Intraday Predictor at 2:00 PM IST (Mon-Fri)\n${CRON_RUN1_SCHEDULE} ${CRON_DAILY_CMD}\n# Run 2: MF Intraday Predictor at 2:15 PM IST (Mon-Fri) - Final Cutoff Check\n${CRON_RUN2_SCHEDULE} ${CRON_DAILY_CMD}\n# Nightly NAV Accuracy Reconciler at 11:30 PM IST (Mon-Fri)\n${CRON_RECONCILE_SCHEDULE} ${CRON_RECONCILE_CMD}\n# Auto-refresh mutual fund disclosures every 10 days (1st, 11th, 21st)\n${CRON_REFRESH_SCHEDULE} ${CRON_REFRESH_CMD}")
 
-echo -e "${GREEN}[OK] Added Crontab Check 1 (1:30 PM IST / 08:00 UTC)${NC}"
-echo -e "${GREEN}[OK] Added Crontab Check 2 (2:30 PM IST / 09:00 UTC)${NC}"
+echo -e "${GREEN}[OK] Added Crontab Check 1 (2:00 PM IST / 08:30 UTC)${NC}"
+echo -e "${GREEN}[OK] Added Crontab Check 2 (2:15 PM IST / 08:45 UTC)${NC}"
 echo -e "${GREEN}[OK] Added Nightly Accuracy Reconciler (11:30 PM IST / 18:00 UTC)${NC}"
 echo -e "${GREEN}[OK] Added Disclosures Auto-Refresh (Every 10 days: 1st, 11th, 21st of month)${NC}"
 

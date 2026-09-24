@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # ==============================================================================
 # Mutual Fund Intraday NAV Predictor - Automated Cron Execution Wrapper
-# Runs on Oracle Cloud VM at 1:20 PM IST (07:50 UTC) Monday-Friday
+# Runs on Oracle Cloud VM at 2:00 PM & 2:15 PM IST (08:30 & 08:45 UTC) Monday-Friday
 # ==============================================================================
 
 set -e

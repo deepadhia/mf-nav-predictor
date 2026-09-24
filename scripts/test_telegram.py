@@ -64,11 +64,11 @@ def test_telegram_connection():
         "━━━━━━━━━━━━━━━━━━━━━━━━\n\n"
         "✅ <b>Telegram Integration is working!</b>\n\n"
         "• <b>Server:</b> Oracle Cloud VM\n"
-        "• <b>Check 1:</b> 1:00 PM IST (Mon–Fri)\n"
-        "• <b>Check 2:</b> 1:45 PM IST (Mon–Fri)\n"
+        "• <b>Check 1 (Pre-Cutoff Pulse):</b> 2:00 PM IST (Mon–Fri)\n"
+        "• <b>Check 2 (Decision Cutoff):</b> 2:15 PM IST (Mon–Fri)\n"
         "• <b>Alert Threshold:</b> ≥ 1.0% Dip/Surge\n\n"
         "━━━━━━━━━━━━━━━━━━━━━━━━\n"
-        "<i>You will receive actionable alerts when mutual funds dip ≥ 1.0% before 2:00 PM cutoffs.</i>"
+        "<i>You will receive actionable alerts when mutual funds dip ≥ 1.0% before the 2:30 PM cutoff.</i>"
     )
 
     url = f"https://api.telegram.org/bot{bot_token}/sendMessage"

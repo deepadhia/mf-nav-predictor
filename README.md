@@ -1,6 +1,6 @@
 # Mutual Fund Intraday NAV Predictor & Automated Dip-Buyer
 
-A high-precision, automated system for tracking intraday Mutual Fund NAV movement at **2:30 PM IST** (30 minutes before the 3:00 PM SEBI same-day NAV cut-off) to inform lump-sum buy decisions with real-time Upstox V3 pricing, historical portfolio disclosures, and automated 30-day accuracy reconciliation.
+A high-precision, automated system for tracking intraday Mutual Fund NAV movements at **2:00 PM & 2:15 PM IST** (before the 2:30 PM broker same-day NAV cut-off) to inform lump-sum buy decisions with real-time Upstox V3 pricing, historical portfolio disclosures, and automated 30-day accuracy reconciliation.
 
 ---
 
@@ -52,12 +52,12 @@ graph TD
 
 ## ⏰ Schedule & Cut-Off Logic
 
-Under SEBI regulations, equity and hybrid mutual fund orders placed and authorized before **3:00 PM IST** receive that day's closing NAV.
+Under SEBI regulations, same-day NAV realization requires orders and payments to be completed before the platform cut-off (typically **2:30 PM IST** on broker platforms like Groww, Zerodha Coin, and MF Central).
 
 | Schedule | IST Time | UTC Time | Purpose |
 | :--- | :---: | :---: | :--- |
-| **Check 1 (Pulse)** | **1:30 PM** | `08:00 UTC` | Early trend snapshot |
-| **Check 2 (Decision)** | **2:30 PM** | `09:00 UTC` | Final calculation (30-min window before 3:00 PM cut-off) |
+| **Check 1 (Pre-Cutoff Pulse)** | **2:00 PM** | `08:30 UTC` | 30-min heads up to analyze trends & prepare orders |
+| **Check 2 (Decision Cutoff)** | **2:15 PM** | `08:45 UTC` | Final calculation (15-min window before 2:30 PM cutoff) |
 | **Nightly Reconciler** | **11:30 PM** | `18:00 UTC` | Audits predictions against published AMC NAVs |
 | **Disclosures Refresh** | 1st, 11th, 21st | `06:00 UTC` | Scrapes latest monthly portfolio disclosures |
 
@@ -146,6 +146,6 @@ cd ~/MFNAVTracker
 
 | Signal | Intraday NAV Estimate | Action |
 | :--- | :---: | :--- |
-| 🟢 **DIP DETECTED** | $\le -1.0\%$ | **Lump-Sum Buy:** Deploy capital before 3:00 PM to capture discounted closing NAV. |
+| 🟢 **DIP DETECTED** | $\le -1.0\%$ | **Lump-Sum Buy:** Deploy capital before 2:30 PM to capture discounted closing NAV. |
 | ⚪ **NORMAL RANGE** | $-1.0\%$ to $+1.0\%$ | **Hold / Skip:** Routine market volatility; no urgent lump-sum opportunity. |
 | 🛑 **SURGE DETECTED** | $\ge +1.0\%$ | **Avoid Lump-Sum:** Market is surging; avoid buying into temporary intraday peaks. |
